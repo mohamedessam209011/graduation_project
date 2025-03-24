@@ -688,7 +688,7 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(
         child: Text(
-          'Welcome, $userType!',
+          'a7a, $userType!',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
