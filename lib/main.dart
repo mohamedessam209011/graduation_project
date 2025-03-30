@@ -7,6 +7,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,6 +23,8 @@ class MyApp extends StatelessWidget {
 }
 
 class OnboardingScreen extends StatelessWidget {
+  const OnboardingScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,6 +90,8 @@ class OnboardingScreen extends StatelessWidget {
 
 // شاشة الترحيب
 class WelcomeScreen extends StatelessWidget {
+  const WelcomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -244,7 +250,7 @@ class WelcomeScreen extends StatelessWidget {
 class LoginScreen extends StatefulWidget {
   final String userType;
 
-  LoginScreen({required this.userType});
+  const LoginScreen({super.key, required this.userType});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -261,11 +267,11 @@ class _LoginScreenState extends State<LoginScreen> {
     await Future.delayed(Duration(seconds: 2));
     // يمكنك تخصيص البريد وكلمة المرور بناءً على نوع المستخدم
     if (widget.userType == 'Student') {
-      return email == "test@student.com" && password == "123456";
+      return email == "1@.com" && password == "123456";
     } else if (widget.userType == 'Doctor') {
-      return email == "test@doctor.com" && password == "123456";
+      return email == "1@.com" && password == "123456";
     } else if (widget.userType == 'Guardian') {
-      return email == "test@guardian.com" && password == "123456";
+      return email == "1@.com" && password == "123456";
     }
     return false;
   }
@@ -455,6 +461,8 @@ class _LoginScreenState extends State<LoginScreen> {
 class ForgotPasswordScreen extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
 
+  ForgotPasswordScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -539,6 +547,8 @@ class ForgotPasswordScreen extends StatelessWidget {
 }
 
 class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
+
   @override
   _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
 }
@@ -627,8 +637,33 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 // زر Reset Password
                 GestureDetector(
                   onTap: () {
-                    if (_passwordController.text ==
-                        _confirmPasswordController.text) {
+                    String newPassword = _passwordController.text.trim();
+                    String confirmPassword =
+                        _confirmPasswordController.text.trim();
+
+                    if (newPassword.isEmpty || confirmPassword.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Please fill in both fields'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    } else if (newPassword.length < 6) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text('Password must be at least 6 characters'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    } else if (newPassword != confirmPassword) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Passwords do not match'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text('Password reset successfully!'),
@@ -636,13 +671,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ),
                       );
                       Navigator.pop(context); // الرجوع إلى الشاشة السابقة
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Passwords do not match'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
                     }
                   },
                   child: Container(
@@ -678,21 +706,197 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 class HomePage extends StatelessWidget {
   final String userType;
 
-  HomePage({required this.userType});
+  const HomePage({super.key, required this.userType});
+
+  @override
+  Widget build(BuildContext context) {
+    // تحديد الخلفية
+    String backgroundImage;
+    if (userType == 'Student') {
+      backgroundImage = 'images/HOME_student.png'; // خلفية الطلاب
+    } else if (userType == 'Doctor') {
+      backgroundImage = 'images/HOME_doctor.png'; // خلفية الأطباء
+    } else if (userType == 'Guardian') {
+      backgroundImage = 'images/HOME_guardian.png'; // خلفية أولياء الأمور
+    } else {
+      backgroundImage = 'images/default_background.png'; // خلفية افتراضية
+    }
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          // الخلفية
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(backgroundImage),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          // الأزرار بناءً على نوع المستخدم
+          if (userType == 'Student') ...[
+            // زر "Works of Year"
+            Positioned(
+              top: 350, // المسافة من الأعلى
+              left: 210,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => WorksOfYearPage()),
+                  );
+                },
+                child: Container(
+                  width: 170,
+                  height: 50,
+                  padding: const EdgeInsets.all(10),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFF05B8FB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Works of Year',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // زر "Time Table"
+            Positioned(
+              top: 540,
+              right: 230,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TimeTablePage()),
+                  );
+                },
+                child: Container(
+                  width: 150,
+                  height: 50,
+                  padding: const EdgeInsets.all(10),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFF05B8FB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Time Table',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // زر "Attendance Rate"
+            Positioned(
+              bottom: 50,
+              left: 190,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AttendanceRatePage()),
+                  );
+                },
+                child: Container(
+                  width: 183,
+                  height: 50,
+                  padding: const EdgeInsets.all(10),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFF05B8FB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Attendance Rate',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class WorksOfYearPage extends StatelessWidget {
+  const WorksOfYearPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Page - $userType'),
+        title: Text('Works of Year'),
+        backgroundColor: Color(0xFF05B8FB),
       ),
       body: Center(
         child: Text(
-          'Welcome, $userType!',
+          'Welcome to Works of Year Page!',
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class TimeTablePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Time Table'),
+      ),
+      body: Center(
+        child: Text(
+          'This is the Time Table Page',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}
+
+class AttendanceRatePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Attendance Rate'),
+      ),
+      body: Center(
+        child: Text(
+          'This is the Attendance Rate Page',
+          style: TextStyle(fontSize: 24),
         ),
       ),
     );
