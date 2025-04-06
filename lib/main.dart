@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//اول شاشه
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
@@ -715,9 +717,9 @@ class HomePage extends StatelessWidget {
     if (userType == 'Student') {
       backgroundImage = 'images/HOME_student.png'; // خلفية الطلاب
     } else if (userType == 'Doctor') {
-      backgroundImage = 'images/HOME_doctor.png'; // خلفية الأطباء
+      backgroundImage = 'images/Home_doctor.png'; // خلفية الأطباء
     } else if (userType == 'Guardian') {
-      backgroundImage = 'images/HOME_guardian.png'; // خلفية أولياء الأمور
+      backgroundImage = 'images/Home_guardian.png'; // خلفية أولياء الأمور
     } else {
       backgroundImage = 'images/default_background.png'; // خلفية افتراضية
     }
@@ -735,6 +737,8 @@ class HomePage extends StatelessWidget {
             ),
           ),
           // الأزرار بناءً على نوع المستخدم
+
+          //زراير الطالب
           if (userType == 'Student') ...[
             // زر "Works of Year"
             Positioned(
@@ -840,14 +844,476 @@ class HomePage extends StatelessWidget {
               ),
             ),
           ],
+          // زراير الدكتور
+          if (userType == 'Doctor') ...[
+            // زر "table"
+            Positioned(
+              top: 330, // المسافة من الأعلى
+              left: 135,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Table()),
+                  );
+                },
+                child: Container(
+                  width: 120,
+                  height: 50,
+                  padding: const EdgeInsets.all(10),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFF05B8FB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Table',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // زر " Attendance Monitoring"
+            Positioned(
+              top: 520,
+              right: 125,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Attendance_Monitoring()),
+                  );
+                },
+                child: Container(
+                  width: 130,
+                  height: 75,
+                  padding: const EdgeInsets.all(10),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFF05B8FB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Attendance Monitoring',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // زر "  Manual_Attendance_Registration "
+            Positioned(
+              bottom: 30,
+              left: 110,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Manual_Attendance_Registration()),
+                  );
+                },
+                child: Container(
+                  width: 200,
+                  height: 70,
+                  padding: const EdgeInsets.all(10),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFF05B8FB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Manual Attendance Registration',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+          //زراير ولي الامر
+          if (userType == 'Guardian') ...[
+            // زر "year_work"
+            Positioned(
+              top: 420, // المسافة من الأعلى
+              left: 135,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => year_work()),
+                  );
+                },
+                child: Container(
+                  width: 115,
+                  height: 50,
+                  padding: const EdgeInsets.all(10),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFF05B8FB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'year work',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // زر "  Attendance_follow_up "
+            Positioned(
+              bottom: 80,
+              left: 90,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Attendance_follow_up()),
+                  );
+                },
+                child: Container(
+                  width: 225,
+                  height: 50,
+                  padding: const EdgeInsets.all(10),
+                  decoration: ShapeDecoration(
+                    color: const Color(0xFF05B8FB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Attendance follow up',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
   }
 }
 
-class WorksOfYearPage extends StatelessWidget {
+//صفح زرااير الطالب
+class WorksOfYearPage extends StatefulWidget {
   const WorksOfYearPage({super.key});
+
+  @override
+  State<WorksOfYearPage> createState() => _WorksOfYearPageState();
+}
+
+class _WorksOfYearPageState extends State<WorksOfYearPage> {
+  String? selectedTerm;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          // الخلفية
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/Works of year.png'), // مسار الصورة
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+
+          // المحتوى
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 1), // مسافة من الأعلى
+
+                // حقل إدخال الكود
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Enter Student Code',
+                      filled: true,
+                      fillColor: Colors.white.withOpacity(0.8),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      labelStyle: const TextStyle(
+                        color: Colors.black54,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Dropdown
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: selectedTerm,
+                      hint: const Text(
+                        'choose',
+                        style: TextStyle(
+                          color: Colors.black54,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      items: ['first term', 'second term'].map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          selectedTerm = newValue!;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Inquiry Button (من غير Positioned)
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => StudentYearWorkPage(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: 143,
+                    height: 50,
+                    padding: const EdgeInsets.all(10),
+                    decoration: ShapeDecoration(
+                      color: const Color(0xFF05B8FB),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Inquiry',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class StudentYearWorkPage extends StatelessWidget {
+  const StudentYearWorkPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('أعمال السنة'),
+        backgroundColor: const Color(0xFF05B8FB),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'نسبة أعمال السنة',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 30),
+
+          // Pie Chart
+          SizedBox(
+            height: 250,
+            child: PieChart(
+              PieChartData(
+                sections: [
+                  PieChartSectionData(
+                    value: 40,
+                    title: 'امتحان شهري',
+                    color: Colors.blue,
+                    radius: 60,
+                    titleStyle:
+                        const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                  PieChartSectionData(
+                    value: 30,
+                    title: 'واجبات',
+                    color: Colors.orange,
+                    radius: 60,
+                    titleStyle:
+                        const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                  PieChartSectionData(
+                    value: 20,
+                    title: 'مشروع',
+                    color: Colors.green,
+                    radius: 60,
+                    titleStyle:
+                        const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                  PieChartSectionData(
+                    value: 10,
+                    title: 'مشاركة',
+                    color: Colors.purple,
+                    radius: 60,
+                    titleStyle:
+                        const TextStyle(fontSize: 14, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 30),
+
+          // مفتاح الألوان
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: const [
+                LegendItem(color: Colors.blue, label: 'امتحان شهري'),
+                LegendItem(color: Colors.orange, label: 'واجبات'),
+                LegendItem(color: Colors.green, label: 'مشروع'),
+                LegendItem(color: Colors.purple, label: 'مشاركة'),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+// Widget للمفتاح
+class LegendItem extends StatelessWidget {
+  final Color color;
+  final String label;
+
+  const LegendItem({super.key, required this.color, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Container(width: 16, height: 16, color: color),
+          const SizedBox(width: 8),
+          Text(label, style: const TextStyle(fontSize: 16)),
+        ],
+      ),
+    );
+  }
+}
+
+//صفح زرااير الطالب
+class TimeTablePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Time Table'),
+      ),
+      body: Center(
+        child: Text(
+          'This is the Time Table Page',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}
+
+// صفح زرااير الطالب
+class AttendanceRatePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Attendance Rate'),
+      ),
+      body: Center(
+        child: Text(
+          'This is the Attendance Rate Page',
+          style: TextStyle(fontSize: 24),
+        ),
+      ),
+    );
+  }
+}
+
+//صفح زراير الدكتور
+class Table extends StatelessWidget {
+  const Table({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -869,34 +1335,96 @@ class WorksOfYearPage extends StatelessWidget {
   }
 }
 
-class TimeTablePage extends StatelessWidget {
+//صفح زراير الدكتور
+class Attendance_Monitoring extends StatelessWidget {
+  const Attendance_Monitoring({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Time Table'),
+        title: Text('Works of Year'),
+        backgroundColor: Color(0xFF05B8FB),
       ),
       body: Center(
         child: Text(
-          'This is the Time Table Page',
-          style: TextStyle(fontSize: 24),
+          'Welcome to Works of Year Page!',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
   }
 }
 
-class AttendanceRatePage extends StatelessWidget {
+//صفح زراير الدكتور
+class Manual_Attendance_Registration extends StatelessWidget {
+  const Manual_Attendance_Registration({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Attendance Rate'),
+        title: Text('Works of Year'),
+        backgroundColor: Color(0xFF05B8FB),
       ),
       body: Center(
         child: Text(
-          'This is the Attendance Rate Page',
-          style: TextStyle(fontSize: 24),
+          'Welcome to Works of Year Page!',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//صفح زراير ولي الامر
+class year_work extends StatelessWidget {
+  const year_work({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Works of Year'),
+        backgroundColor: Color(0xFF05B8FB),
+      ),
+      body: Center(
+        child: Text(
+          'Welcome to Works of Year Page!',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//صفح زراير ولي الامر
+class Attendance_follow_up extends StatelessWidget {
+  const Attendance_follow_up({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Works of Year'),
+        backgroundColor: Color(0xFF05B8FB),
+      ),
+      body: Center(
+        child: Text(
+          'Welcome to Works of Year Page!',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
