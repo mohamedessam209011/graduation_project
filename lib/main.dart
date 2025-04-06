@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, prefer_const_declarations, camel_case_types, use_build_context_synchronously, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -1084,48 +1084,7 @@ class _WorksOfYearPageState extends State<WorksOfYearPage> {
                     ),
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
-                // Dropdown
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: selectedTerm,
-                      hint: const Text(
-                        'choose',
-                        style: TextStyle(
-                          color: Colors.black54,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      items: ['first term', 'second term'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedTerm = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 20),
-
                 // Inquiry Button (من غير Positioned)
                 GestureDetector(
                   onTap: () {
@@ -1173,16 +1132,20 @@ class StudentYearWorkPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // القيم الأساسية
+    final double subject1 = 40;
+    final double subject2 = 30;
+    final double sum = subject1 + subject2;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('أعمال السنة'),
+        title: const Text('Works of year'),
         backgroundColor: const Color(0xFF05B8FB),
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(
-            'نسبة أعمال السنة',
+            'Percentage of years work',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -1190,40 +1153,32 @@ class StudentYearWorkPage extends StatelessWidget {
           ),
           const SizedBox(height: 30),
 
-          // Pie Chart
+// Pie Chart
           SizedBox(
             height: 250,
             child: PieChart(
               PieChartData(
                 sections: [
                   PieChartSectionData(
-                    value: 40,
-                    title: 'امتحان شهري',
+                    value: subject1,
+                    title: 'subject 1',
                     color: Colors.blue,
                     radius: 60,
                     titleStyle:
                         const TextStyle(fontSize: 14, color: Colors.white),
                   ),
                   PieChartSectionData(
-                    value: 30,
-                    title: 'واجبات',
+                    value: subject2,
+                    title: 'subject 2',
                     color: Colors.orange,
                     radius: 60,
                     titleStyle:
                         const TextStyle(fontSize: 14, color: Colors.white),
                   ),
                   PieChartSectionData(
-                    value: 20,
-                    title: 'مشروع',
+                    value: sum,
+                    title: 'sum',
                     color: Colors.green,
-                    radius: 60,
-                    titleStyle:
-                        const TextStyle(fontSize: 14, color: Colors.white),
-                  ),
-                  PieChartSectionData(
-                    value: 10,
-                    title: 'مشاركة',
-                    color: Colors.purple,
                     radius: 60,
                     titleStyle:
                         const TextStyle(fontSize: 14, color: Colors.white),
@@ -1240,10 +1195,9 @@ class StudentYearWorkPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: const [
-                LegendItem(color: Colors.blue, label: 'امتحان شهري'),
-                LegendItem(color: Colors.orange, label: 'واجبات'),
-                LegendItem(color: Colors.green, label: 'مشروع'),
-                LegendItem(color: Colors.purple, label: 'مشاركة'),
+                LegendItem(color: Colors.blue, label: 'subject 1'),
+                LegendItem(color: Colors.orange, label: 'subject 2'),
+                LegendItem(color: Colors.green, label: 'sum'),
               ],
             ),
           )
