@@ -71,6 +71,10 @@ flutter:
     - images/Home_doctor.png
     - images/Home_guardian.png
     - images/Works of year.png
+    - images/Table_student.png
+    - images/Table_student2.png
+    - images/Attendance_Rate.png
+    - images/Table_doctor.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
