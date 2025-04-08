@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, file_names
 
 import 'package:ai_project/pages/AttendanceRatePage.dart';
 import 'package:ai_project/pages/Attendance_Monitoring.dart';
@@ -39,6 +39,17 @@ class HomePage extends StatelessWidget {
                 image: AssetImage(backgroundImage),
                 fit: BoxFit.cover,
               ),
+            ),
+          ),
+          // زر الرجوع
+          Positioned(
+            top: 30, // المسافة من أعلى الشاشة
+            left: 10, // المسافة من اليسار
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
+              onPressed: () {
+                Navigator.pop(context); // الرجوع للشاشة السابقة
+              },
             ),
           ),
           // الأزرار بناءً على نوع المستخدم

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_const_literals_to_create_immutables
+// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_const_literals_to_create_immutables, file_names, use_build_context_synchronously
 
 import 'package:ai_project/pages/HomePage.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +82,17 @@ class _LoginScreenState extends State<LoginScreen> {
             fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
+          ),
+          // زر الرجوع
+          Positioned(
+            top: 30, // المسافة من أعلى الشاشة
+            left: 10, // المسافة من اليسار
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
+              onPressed: () {
+                Navigator.pop(context); // الرجوع للشاشة السابقة
+              },
+            ),
           ),
           Center(
             child: SingleChildScrollView(
@@ -231,6 +242,19 @@ class ForgotPasswordScreen extends StatelessWidget {
             width: double.infinity,
             height: double.infinity,
           ),
+          // زر الرجوع
+          // زر الرجوع
+          Positioned(
+            top: 30, // المسافة من أعلى الشاشة
+            left: 10, // المسافة من اليسار
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
+              onPressed: () {
+                Navigator.pop(context); // الرجوع للشاشة السابقة
+              },
+            ),
+          ),
+
           // المحتوى
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -327,6 +351,17 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             fit: BoxFit.cover, // لجعل الصورة تغطي الشاشة بالكامل
             width: double.infinity,
             height: double.infinity,
+          ),
+          // زر الرجوع
+          Positioned(
+            top: 30, // المسافة من أعلى الشاشة
+            left: 10, // المسافة من اليسار
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
+              onPressed: () {
+                Navigator.pop(context); // الرجوع للشاشة السابقة
+              },
+            ),
           ),
           // المحتوى
           Padding(

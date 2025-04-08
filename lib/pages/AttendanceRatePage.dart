@@ -1,4 +1,4 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -61,6 +61,17 @@ class _AttendanceRatePageState extends State<AttendanceRatePage> {
                 image: AssetImage('images/Attendance_Rate.png'),
                 fit: BoxFit.cover,
               ),
+            ),
+          ),
+          // زر الرجوع
+          Positioned(
+            top: 30, // المسافة من أعلى الشاشة
+            left: 10, // المسافة من اليسار
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
+              onPressed: () {
+                Navigator.pop(context); // الرجوع للشاشة السابقة
+              },
             ),
           ),
 

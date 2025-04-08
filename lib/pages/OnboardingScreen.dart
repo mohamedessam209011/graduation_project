@@ -1,7 +1,8 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+// ignore_for_file: file_names, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:ai_project/pages/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // لإضافة SystemNavigator
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -17,6 +18,17 @@ class OnboardingScreen extends StatelessWidget {
             fit: BoxFit.cover, // تغطية الشاشة بالكامل
             width: double.infinity, // عرض الصورة
             height: double.infinity, // ارتفاع الصورة
+          ),
+          // زر الرجوع
+          Positioned(
+            top: 30, // المسافة من أعلى الشاشة
+            left: 10, // المسافة من اليسار
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
+              onPressed: () {
+                SystemNavigator.pop(); // إغلاق التطبيق
+              },
+            ),
           ),
           // العناصر فوق الصورة
           Center(

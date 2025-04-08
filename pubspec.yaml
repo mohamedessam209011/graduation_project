@@ -75,6 +75,7 @@ flutter:
     - images/Table_student2.png
     - images/Attendance_Rate.png
     - images/Table_doctor.png
+    - images/Attendance monitoring.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

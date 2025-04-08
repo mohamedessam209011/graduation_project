@@ -27,6 +27,17 @@ class _TimeTablePageState extends State<TimeTablePage> {
               ),
             ),
           ),
+          // زر الرجوع
+          Positioned(
+            top: 30, // المسافة من أعلى الشاشة
+            left: 10, // المسافة من اليسار
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
+              onPressed: () {
+                Navigator.pop(context); // الرجوع للشاشة السابقة
+              },
+            ),
+          ),
           Center(
             child: Form(
               key: _formKey,
@@ -133,6 +144,17 @@ class StudentTimeTablePage extends StatelessWidget {
                 image: AssetImage('images/Table_student2.png'),
                 fit: BoxFit.cover,
               ),
+            ),
+          ),
+          // زر الرجوع
+          Positioned(
+            top: 30, // المسافة من أعلى الشاشة
+            left: 10, // المسافة من اليسار
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
+              onPressed: () {
+                Navigator.pop(context); // الرجوع للشاشة السابقة
+              },
             ),
           ),
 
