@@ -64,7 +64,8 @@ class HomePage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => WorksOfYearPage()),
+                    MaterialPageRoute(
+                        builder: (context) => StudentYearWorkPage()),
                   );
                 },
                 child: Container(
@@ -98,7 +99,10 @@ class HomePage extends StatelessWidget {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => TimeTablePage()),
+                    MaterialPageRoute(
+                        builder: (context) => StudentTimeTablePage(
+                              studentCode: '1234',
+                            )),
                   );
                 },
                 child: Container(

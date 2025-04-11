@@ -1,7 +1,9 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, prefer_const_literals_to_create_immutables, file_names, use_build_context_synchronously
 
 import 'package:ai_project/pages/HomePage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginScreen extends StatefulWidget {
   final String userType;
@@ -14,53 +16,54 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _codeController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = false;
   bool _isLoading = false;
 
-  Future<bool> _simulateServerLogin(String email, String password) async {
-    await Future.delayed(Duration(seconds: 2));
-    // يمكنك تخصيص البريد وكلمة المرور بناءً على نوع المستخدم
-    if (widget.userType == 'Student') {
-      return email == "1@.com" && password == "123456";
-    } else if (widget.userType == 'Doctor') {
-      return email == "1@.com" && password == "123456";
-    } else if (widget.userType == 'Guardian') {
-      return email == "1@.com" && password == "123456";
-    }
-    return false;
-  }
+  Future<void> _loginWithCode(String code, String password) async {
+    setState(() {
+      _isLoading = true;
+    });
 
-  void _login() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+    // تحويل الكود إلى بريد إلكتروني
+    String email = '$code@student.com';
 
-      bool isSuccess = await _simulateServerLogin(
-        _emailController.text,
-        _passwordController.text,
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+
+      // تسجيل الدخول ناجح
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomePage(userType: widget.userType)),
       );
-
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+      if (e.code == 'user-not-found') {
+        errorMessage = 'No user found for that code.';
+      } else if (e.code == 'wrong-password') {
+        errorMessage = 'Wrong password provided for that code.';
+      } else {
+        errorMessage = 'An error occurred. Please try again.';
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
 
-      if (isSuccess) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => HomePage(userType: widget.userType)),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Invalid email or password'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+  void _login() {
+    if (_formKey.currentState!.validate()) {
+      _loginWithCode(_codeController.text, _passwordController.text);
     }
   }
 
@@ -85,12 +88,12 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           // زر الرجوع
           Positioned(
-            top: 30, // المسافة من أعلى الشاشة
-            left: 10, // المسافة من اليسار
+            top: 30,
+            left: 10,
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
               onPressed: () {
-                Navigator.pop(context); // الرجوع للشاشة السابقة
+                Navigator.pop(context);
               },
             ),
           ),
@@ -113,11 +116,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(height: 20),
-                      // حقل إدخال البريد الإلكتروني
+                      // حقل إدخال الكود
                       TextFormField(
-                        controller: _emailController,
+                        controller: _codeController,
                         decoration: InputDecoration(
-                          labelText: 'Email',
+                          labelText: 'Student Code',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -126,10 +129,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
+                            return 'Please enter your code';
                           }
-                          if (!value.contains('@')) {
-                            return 'Please enter a valid email';
+                          if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+                            return 'Please enter a valid code';
                           }
                           return null;
                         },
@@ -225,99 +228,149 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class ForgotPasswordScreen extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController();
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
-  ForgotPasswordScreen({super.key});
+  @override
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final TextEditingController _codeController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  Future<bool> checkCodeExists(String code) async {
+    try {
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(code) // استخدم الكود كـ Document ID
+          .get();
+
+      return doc.exists;
+    } catch (e) {
+      print("Error checking code: $e");
+      return false;
+    }
+  }
+
+  void _handleContinue() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      String code = _codeController.text.trim();
+      bool exists = await checkCodeExists(code);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (exists) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResetPasswordScreen(studentCode: code),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('الكود غير موجود في قاعدة البيانات'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // الخلفية
           Image.asset(
-            'images/forgot_password.png', // استبدل بالمسار الخاص بالصورة
-            fit: BoxFit.cover, // لجعل الصورة تغطي الشاشة بالكامل
+            'images/forgot_password.png',
+            fit: BoxFit.cover,
             width: double.infinity,
             height: double.infinity,
           ),
-          // زر الرجوع
-          // زر الرجوع
           Positioned(
-            top: 30, // المسافة من أعلى الشاشة
-            left: 10, // المسافة من اليسار
+            top: 30,
+            left: 10,
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.black, size: 30),
-              onPressed: () {
-                Navigator.pop(context); // الرجوع للشاشة السابقة
-              },
+              onPressed: () => Navigator.pop(context),
             ),
           ),
-
-          // المحتوى
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 70),
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                    labelStyle: TextStyle(color: Colors.grey),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white.withOpacity(0.8),
-                  ),
-                ),
-                SizedBox(height: 40),
-                GestureDetector(
-                  onTap: () {
-                    String email = _emailController.text;
-                    RegExp emailRegex = RegExp(
-                        r'^[a-zA-Z0-9.a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
-                    if (!emailRegex.hasMatch(email)) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Please enter a valid email address'),
-                          backgroundColor: Colors.red,
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 70),
+                    TextFormField(
+                      controller: _codeController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: 'أدخل كود الطالب',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      );
-                    } else {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ResetPasswordScreen()),
-                      );
-                    }
-                  },
-                  child: Container(
-                    width: 183, // عرض الزر
-                    height: 50, // ارتفاع الزر
-                    decoration: ShapeDecoration(
-                      color: const Color(0xFF33BEF1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(40),
+                        filled: true,
+                        fillColor: Colors.white.withOpacity(0.8),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'من فضلك أدخل الكود';
+                        }
+                        return null;
+                      },
                     ),
-                    child: Center(
-                      child: Text(
-                        'continue',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                    const SizedBox(height: 40),
+                    _isLoading
+                        ? const CircularProgressIndicator()
+                        : GestureDetector(
+                            onTap: _handleContinue,
+                            child: Container(
+                              width: 183,
+                              height: 50,
+                              decoration: ShapeDecoration(
+                                color: const Color(0xFF33BEF1),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  'استمرار',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    const SizedBox(height: 20), // مسافة بين الزرين
+                    ElevatedButton(
+                      onPressed: () async {
+                        var snapshot = await FirebaseFirestore.instance
+                            .collection('users')
+                            .get();
+                        for (var doc in snapshot.docs) {
+                          print("Document ID: ${doc.id}");
+                        }
+                      },
+                      child: const Text("Print All Document IDs"),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ],
@@ -327,7 +380,9 @@ class ForgotPasswordScreen extends StatelessWidget {
 }
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
+  final String studentCode; // استقبال الكود من الشاشة السابقة
+
+  const ResetPasswordScreen({super.key, required this.studentCode});
 
   @override
   _ResetPasswordScreenState createState() => _ResetPasswordScreenState();
@@ -427,7 +482,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 SizedBox(height: 40),
                 // زر Reset Password
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     String newPassword = _passwordController.text.trim();
                     String confirmPassword =
                         _confirmPasswordController.text.trim();
@@ -455,13 +510,28 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         ),
                       );
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Password reset successfully!'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                      Navigator.pop(context); // الرجوع إلى الشاشة السابقة
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(widget.studentCode)
+                            .update({'password': newPassword});
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Password reset successfully!'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+
+                        Navigator.pop(context);
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Error updating password: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     }
                   },
                   child: Container(
